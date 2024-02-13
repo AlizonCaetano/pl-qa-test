@@ -1,23 +1,39 @@
-## Instale as depedências para executar o projeto
+### Faça um clone desse repositório
 
 ```bash
-$ npm install dotenv@16.4.1
+$ git clone https://github.com/AlizonCaetano/pl-qa-test.git
 ```
+
+### Navegue até a pasta raiz
+
+### Configure as variaveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto com as variaveis presentes no `.env.example`
+
+#### `EMAIL=`"exemplo@email.com"
+
+#### `PASSWORD=`"abc123"
+
+#### `GITHUB_USER_FULLNAME=`"Jon Snow"
+
+## Execute o comando para instalar as depedências
 
 ```bash
-$ npm install jest@29.7.0
+$ npm install
 ```
+
+ou
 
 ```bash
-$ npm install dotenv@20.3.0
+$ yarn
 ```
 
-## Abra a pasta raiz e rode o comando para iniciar o teste em Jest
+## Por fim, execute o comando abaixo para iniciar o teste
 
 ```bash
 $ npm run test
 ```
 
-### Pontos de atenção
+## ⚠️ Pontos de atenção ⚠️
 
-- Foi necessário validar se após logar é pedido uma autenticação de 2 fatores, há um timeout de 60 segundos para receber o token pelo e-mail e confirmar o token manualmente.
+Se, após o login, o github solicitar um código de verificação enviado por e-mail, ou se a conta utilizada possuir autenticação em dois fatores, o script está preparado para detectar essa situação. Nesse caso, será concedido um intervalo de espera de 2 minutos para que a ação manual necessária seja realizada antes que o processo prossiga automaticamente.
