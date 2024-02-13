@@ -2,6 +2,8 @@ const delay = require("../utils/delay");
 
 const SelectRandomRepository = async ({ page }) => {
   try {
+    await page.waitForXPath('//a[contains(@itemprop, "codeRepository")]');
+
     const repositoriesListElements = await page.$x(
       '//a[contains(@itemprop, "codeRepository")]'
     );
@@ -29,6 +31,8 @@ const SelectRandomRepository = async ({ page }) => {
     await pullRequestsOfRepositoryButton.click();
 
     await delay(2000);
+
+    await page.waitForXPath('//a[contains(@href, "compare")]');
 
     return true;
   } catch (error) {
