@@ -1,12 +1,14 @@
 const puppeteer = require("puppeteer");
 const robotHandle = require("../puppeteerFunctions");
-let page;
 
 describe("Create a new repository and take screenshot", () => {
+  let page;
+  let browser;
+
   beforeAll(async () => {
     const url = "https://github.com/";
 
-    const browser = await puppeteer.launch({ headless: false, slowMo: 10 });
+    browser = await puppeteer.launch({ headless: false, slowMo: 10 });
     page = await browser.newPage();
 
     await page.setViewport({
@@ -18,7 +20,7 @@ describe("Create a new repository and take screenshot", () => {
   });
 
   afterAll(async () => {
-    await page.close();
+    await browser.close();
   });
 
   it("should open Github and login account", async () => {
@@ -31,7 +33,7 @@ describe("Create a new repository and take screenshot", () => {
     const goToRepositories = await robotHandle.GoToRepositories({ page });
 
     expect(goToRepositories).toBe(true);
-  });
+  }, 30000);
 
   it("should select a random repository and open this", async () => {
     const selectRandomRepository = await robotHandle.SelectRandomRepository({
@@ -39,7 +41,7 @@ describe("Create a new repository and take screenshot", () => {
     });
 
     expect(selectRandomRepository).toBe(true);
-  });
+  }, 30000);
 
   it("should be create a new repository and take screenshot", async () => {
     const createRepository = await robotHandle.CreateRepository({ page });
@@ -51,5 +53,5 @@ describe("Create a new repository and take screenshot", () => {
     const initiateLogout = await robotHandle.InitiateLogout({ page });
 
     expect(initiateLogout).toBe(true);
-  });
+  }, 30000);
 });

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const username = process.env.GITHUB_USERNAME;
+const username = process.env.GITHUB_USER_FULLNAME;
 
 const GoToRepositories = async ({ page }) => {
   try {
@@ -19,20 +19,20 @@ const GoToRepositories = async ({ page }) => {
     await page.waitForNavigation({ waitUntil: "load" });
 
     const userNameInProfileInfos = await page.waitForXPath(
-      '//span[@itemprop="name"]'
+      '//span[contains(@class, "fullname")]'
     );
 
     const userNameInProfileInfosText = await userNameInProfileInfos.evaluate(
       (el) => el.textContent.trim()
     );
 
-    if (userNameInProfileInfosText != username) {
+    if (userNameInProfileInfosText !== username) {
       throw new Error("The username doesn't matches with credentials.");
     }
 
     return true;
   } catch (error) {
-    return console.log(error);
+    throw new Error(error);
   }
 };
 

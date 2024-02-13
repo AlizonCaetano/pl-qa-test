@@ -24,7 +24,7 @@ const InitiateLogout = async ({ page }) => {
 
     await page.waitForNavigation({ waitUntil: "load" });
 
-    let logoutForm;
+    let logoutForm = null;
 
     try {
       logoutForm = await page.waitForXPath(
@@ -34,32 +34,34 @@ const InitiateLogout = async ({ page }) => {
     } catch {}
 
     if (logoutForm) {
-      (async (page, logoutForm) => {
-        let tryCount = 0;
-        let warningIsVisible = true;
+      let tryCount = 0;
+      let warningIsVisible = true;
 
-        do {
-          let cathElement;
+      do {
+        let cathElement = null;
 
-          try {
-            cathElement = await page.waitForXPath(logoutForm, {
-              timeout: 2000,
-            });
-          } catch {}
+        try {
+          cathElement = await page.waitForXPath(logoutForm, {
+            timeout: 2000,
+          });
+        } catch {}
 
-          await delay(2000);
-          tryCount++;
-        } while (warningIsVisible && tryCount <= 60);
-
-        if (tryCount >= 60) {
-          throw new Error(`Logout not sucessful`);
+        if (!cathElement) {
+          warningIsVisible = false;
         }
-      })();
+
+        await delay(2000);
+        tryCount++;
+      } while (warningIsVisible && tryCount < 60);
+
+      if (tryCount >= 60) {
+        throw new Error(`Logout not sucessful`);
+      }
     }
 
     return true;
   } catch (error) {
-    return console.log(error);
+    throw new Error(error);
   }
 };
 

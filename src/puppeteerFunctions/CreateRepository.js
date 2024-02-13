@@ -20,11 +20,11 @@ const CreateRepository = async ({ page }) => {
     submitButtonRepository.click();
 
     await page.waitForNavigation({ waitUntil: "load" });
-    await page.screenshot({ path: "./src/img/screenshot.png" });
+    await page.screenshot({ path: `./src/img/${newRepositoryName}.png` });
 
     return true;
   } catch (error) {
-    return console.log(error);
+    throw new Error(error);
   }
 };
 

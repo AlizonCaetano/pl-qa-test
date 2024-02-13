@@ -25,13 +25,7 @@ const AuthLogin = async ({ page }) => {
 
     await page.waitForNavigation({ waitUntil: "load" });
 
-    const localUrl = await page.url();
-
-    if (localUrl == "https://github.com/session") {
-      throw new Error("Not authorized");
-    }
-
-    let twoFactorElement;
+    let twoFactorElement = null;
 
     try {
       twoFactorElement = await page.waitForXPath(
@@ -41,32 +35,40 @@ const AuthLogin = async ({ page }) => {
     } catch {}
 
     if (twoFactorElement) {
-      (async (page, twoFactorElement) => {
-        let tryCount = 0;
-        let warningIsVisible = true;
+      let tryCount = 0;
+      let warningIsVisible = true;
 
-        do {
-          let cathElement;
+      do {
+        let cathElement = null;
 
-          try {
-            cathElement = await page.waitForXPath(twoFactorElement, {
-              timeout: 2000,
-            });
-          } catch {}
+        try {
+          cathElement = await page.waitForXPath(twoFactorElement, {
+            timeout: 2000,
+          });
+        } catch {}
 
-          await delay(2000);
-          tryCount++;
-        } while (warningIsVisible && tryCount <= 60);
-
-        if (tryCount >= 60) {
-          throw new Error(`Manual token not typed.`);
+        if (!cathElement) {
+          warningIsVisible = false;
         }
-      })();
+
+        await delay(2000);
+        tryCount++;
+      } while (warningIsVisible && tryCount < 60);
+
+      if (tryCount >= 60) {
+        throw new Error("Manual token not typed.");
+      }
+    }
+
+    const localUrl = await page.url();
+    console.log(localUrl);
+    if (localUrl !== "https://github.com/") {
+      throw new Error("Login not sucessful");
     }
 
     return true;
   } catch (error) {
-    return console.log(error);
+    throw new Error(error);
   }
 };
 

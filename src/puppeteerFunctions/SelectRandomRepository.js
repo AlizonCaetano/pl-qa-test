@@ -32,7 +32,7 @@ const SelectRandomRepository = async ({ page }) => {
 
     return true;
   } catch (error) {
-    return console.log(error);
+    throw new Error(error);
   }
 };
 
