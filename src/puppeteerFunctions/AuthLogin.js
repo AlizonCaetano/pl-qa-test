@@ -60,8 +60,10 @@ const AuthLogin = async ({ page }) => {
       }
     }
 
+    await page.waitForXPath('//button[contains(@aria-label, "user")]');
+
     const localUrl = await page.url();
-    console.log(localUrl);
+
     if (localUrl !== "https://github.com/") {
       throw new Error("Login not sucessful");
     }
